@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#f2f0ea"/>
+  <rect x="60" y="60" width="1080" height="510" rx="34" fill="#1d2d23"/>
+  <circle cx="900" cy="250" r="190" fill="none" stroke="#c8f27b" stroke-opacity=".18" stroke-width="2"/>
+  <circle cx="900" cy="250" r="130" fill="none" stroke="#c8f27b" stroke-opacity=".4" stroke-width="2"/>
+  <text x="125" y="180" fill="#c8f27b" font-family="Arial, sans-serif" font-size="22" font-weight="700" letter-spacing="5">LUMA / MEDIA TOOL</text>
+  <text x="125" y="300" fill="#f5f5ed" font-family="Georgia, serif" font-size="76">Сжатие медиа</text>
+  <text x="125" y="355" fill="#aab8ab" font-family="Arial, sans-serif" font-size="24">Локально. Приватно. Без облака.</text>
+  <text x="892" y="270" text-anchor="middle" fill="#c8f27b" font-family="Arial, sans-serif" font-size="70">+</text>
+</svg>
