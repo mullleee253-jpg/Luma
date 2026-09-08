@@ -69,22 +69,30 @@ const buildBetaImageBlob = async (file, enhanceGraphics) => {
   canvas.width = width
   canvas.height = height
   const context = canvas.getContext('2d', { alpha: false })
+  context.imageSmoothingEnabled = true
+  context.imageSmoothingQuality = 'high'
   context.fillStyle = '#ffffff'
   context.fillRect(0, 0, width, height)
-  context.filter = enhanceGraphics ? 'contrast(1.04) saturate(1.06)' : 'none'
+  context.filter = enhanceGraphics ? 'contrast(1.08) saturate(1.1) brightness(1.015)' : 'none'
   context.drawImage(bitmap, 0, 0, width, height)
   bitmap.close()
 
-  const qualities = [0.42, 0.3, 0.22, 0.16, 0.1, 0.06]
-  let best = file.file
+  const targetSize = Math.max(1024, Math.floor(file.size / 600))
+  const qualities = [0.72, 0.58, 0.46, 0.36, 0.28, 0.2, 0.14, 0.09]
+  const candidates = []
   for (const quality of qualities) {
     const blob = await new Promise((resolve) => {
       canvas.toBlob((result) => resolve(result || file.file), 'image/webp', quality)
     })
-    if (blob.size < best.size) best = blob
+    candidates.push({ blob, quality })
   }
 
-  return { blob: best, info: { extension: 'webp' } }
+  const underTarget = candidates.filter((candidate) => candidate.blob.size <= targetSize)
+  const selected = underTarget.length
+    ? underTarget.reduce((best, candidate) => candidate.blob.size > best.blob.size ? candidate : best)
+    : candidates.reduce((best, candidate) => candidate.blob.size < best.blob.size ? candidate : best)
+
+  return { blob: selected.blob, info: { extension: 'webp', quality: selected.quality, targetSize } }
 }
 
 function App() {
@@ -197,7 +205,7 @@ function App() {
         <div className="drop-copy">
           <span className="section-tag">01 / ДОБАВЬТЕ ФАЙЛЫ</span>
           <h2>Перетащите медиа сюда</h2>
-          <p>{tab === 'beta' ? 'Экспериментальная лаборатория: до 600× на подходящих изображениях. Фактический коэффициент зависит от деталей исходника.' : mode === 'compact' ? 'Сильное сжатие с умной обработкой деталей: уменьшение размера без заметного падения качества.' : 'Бережный режим сохраняет исходные пиксели и оптимизирует без агрессивного ухудшения.'}</p>
+          <p>{tab === 'beta' ? 'Экспериментальная лаборатория: цель до 600× с quality guard, умным ресайзом и улучшением деталей. Фактический коэффициент зависит от исходника.' : mode === 'compact' ? 'Сильное сжатие с умной обработкой деталей: уменьшение размера без заметного падения качества.' : 'Бережный режим сохраняет исходные пиксели и оптимизирует без агрессивного ухудшения.'}</p>
           <div className="mode-switch">
             <button className={mode === 'careful' ? 'active' : ''} onClick={() => setMode('careful')}>Без потерь</button>
             <button className={mode === 'compact' ? 'active' : ''} onClick={() => setMode('compact')}>Сильное сжатие</button>
