@@ -2,7 +2,7 @@
 
 Native lossless byte-stream archiver in C++20.
 
-The program reads files as binary bytes, compresses repeated byte patterns with canonical Huffman coding, stores a CRC32 checksum, and restores the exact original byte sequence. If compression would make a file larger, it stores the original bytes instead of pretending that compression happened.
+The program reads files as binary bytes, compares RLE and canonical Huffman representations, stores the smallest one, and verifies the result with CRC32. It restores the exact original byte sequence. If compression would make a file larger, it stores the original bytes instead of pretending that compression happened.
 
 ## Build on Windows
 
@@ -26,7 +26,11 @@ luma-archive.exe pack photo.bin photo.luma
 luma-archive.exe unpack photo.luma photo-restored.bin
 ```
 
-The unpack command verifies the archive CRC32. A 600x lossless ratio cannot be guaranteed for arbitrary files: already compressed data and random bytes contain no removable redundancy. The tool reports the real ratio and never changes the original bytes.# React + Vite
+The unpack command verifies the archive CRC32. RLE can exceed 600x on data with long repeated byte runs; a 600x lossless ratio cannot be guaranteed for arbitrary files because already compressed data and random bytes contain no removable redundancy. The tool reports the real ratio and never changes the original bytes.
+
+The included `luma-archive.exe` is a 64-bit Windows build.
+
+# React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
