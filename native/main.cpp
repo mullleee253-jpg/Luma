@@ -84,4 +84,15 @@ bool unpack(const std::string& source, const std::string& destination) {
 }
 }
 
-int main(int argc, char** argv) { if (argc != 4 || (std::string(argv[1]) != "pack" && std::string(argv[1]) != "unpack")) { std::cerr << "Usage: luma-archive pack <input> <archive.luma>\n       luma-archive unpack <archive.luma> <output>\n"; return 2; } return std::string(argv[1]) == "pack" ? !pack(argv[2], argv[3]) : !unpack(argv[2], argv[3]); }
+int main(int argc, char** argv) {
+  if (argc != 4 || (std::string(argv[1]) != "pack" && std::string(argv[1]) != "unpack")) {
+    std::cout << "Luma Archive - lossless binary compressor\n\n"
+              << "Usage:\n"
+              << "  luma-archive.exe pack <input> <archive.luma>\n"
+              << "  luma-archive.exe unpack <archive.luma> <output>\n\n"
+              << "Close this window with Enter.\n";
+    std::cin.get();
+    return argc == 1 ? 0 : 2;
+  }
+  return std::string(argv[1]) == "pack" ? !pack(argv[2], argv[3]) : !unpack(argv[2], argv[3]);
+}
